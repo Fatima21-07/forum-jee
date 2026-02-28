@@ -1,15 +1,14 @@
-# Utiliser Tomcat 10.1 avec JDK 21
+# Étape 1 : Build du projet avec Maven
+FROM maven:3.9.6-eclipse-temurin-21 AS build
+WORKDIR /app
+COPY . .
+RUN mvn clean package -DskipTests
+
+# Étape 2 : Déploiement avec Tomcat
 FROM tomcat:10.1-jdk21-slim
-
-# Supprimer les applications par défaut de Tomcat
 RUN rm -rf /usr/local/tomcat/webapps/*
+# Copier le WAR généré depuis l'étape de build
+COPY --from=build /app/target/forum-jee.war /usr/local/tomcat/webapps/ROOT.war
 
-# Copier le fichier WAR généré dans le dossier webapps de Tomcat sous le nom ROOT.war
-# (ROOT.war permet d'accéder à l'app via / au lieu de /forum-jee)
-COPY target/forum-jee.war /usr/local/tomcat/webapps/ROOT.war
-
-# Exposer le port 8080
 EXPOSE 8080
-
-# Lancer Tomcat
 CMD ["catalina.sh", "run"]
