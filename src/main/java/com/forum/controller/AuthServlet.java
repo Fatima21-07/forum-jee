@@ -2,6 +2,7 @@ package com.forum.controller;
 
 import com.forum.dao.DBConnection;
 import com.forum.model.User;
+import com.forum.util.EmailUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
@@ -106,15 +107,18 @@ public class AuthServlet extends HttpServlet {
             ps.setString(5, token);
             
             if (ps.executeUpdate() > 0) {
-                // Simulation d'envoi d'email
-                String activationLink = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/verify?token=" + token;
-                System.out.println("----- EMAIL SIMULATION -----");
-                System.out.println("To: " + email);
-                System.out.println("Subject: Validation de votre compte Forum CDL");
-                System.out.println("Link: " + activationLink);
-                System.out.println("----------------------------");
+                // Envoi d'email réel
+                String activationLink = request.getScheme() + "://" + request.getServerName() + (request.getServerPort() == 80 || request.getServerPort() == 443 ? "" : ":" + request.getServerPort()) + request.getContextPath() + "/verify?token=" + token;
                 
-                request.setAttribute("success", "Inscription réussie ! Veuillez cliquer sur le lien envoyé par email (voir console serveur) pour activer votre compte.");
+                String subject = "Validation de votre compte Forum CDL";
+                String body = "Bonjour " + username + ",\n\n"
+                            + "Merci pour votre inscription. Veuillez cliquer sur le lien ci-dessous pour activer votre compte :\n"
+                            + activationLink + "\n\n"
+                            + "Cordialement,\nL'équipe Forum CDL";
+                
+                EmailUtil.sendEmail(email, subject, body);
+                
+                request.setAttribute("success", "Inscription réussie ! Un lien de validation a été envoyé à votre adresse email : " + email);
                 request.getRequestDispatcher("/WEB-INF/views/login.jsp").forward(request, response);
             } else {
                 request.setAttribute("error", "Erreur lors de l'inscription");
