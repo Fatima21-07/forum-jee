@@ -23,7 +23,7 @@
                         <div class="d-flex w-100 justify-content-between align-items-center">
                             <div>
                                 <span class="badge bg-secondary mb-2">${topic.categoryName}</span>
-                                <h5 class="mb-1 fw-bold text-dark">${topic.title}</h5>
+                                <h5 class="mb-2 fw-bold topic-item-title">${topic.title}</h5>
                                 <div class="text-muted small">
                                     <i class="fas fa-user me-1"></i> ${topic.authorName} 
                                     <span class="mx-2">|</span>
@@ -31,7 +31,7 @@
                                 </div>
                             </div>
                             <div class="text-end">
-                                <span class="badge bg-primary rounded-pill px-3 py-2">
+                                <span class="stats-pill">
                                     <i class="fas fa-comment me-1"></i> ${topic.postCount}
                                 </span>
                             </div>

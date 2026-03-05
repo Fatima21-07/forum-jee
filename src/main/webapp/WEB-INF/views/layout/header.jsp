@@ -11,6 +11,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><fmt:message key="app.name" /></title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
@@ -19,7 +22,7 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/style.css">
 </head>
 <body class="bg-light">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm mb-4">
+    <nav class="navbar navbar-expand-lg navbar-dark app-navbar shadow-sm mb-4">
         <div class="container">
             <a class="navbar-brand fw-bold" href="${pageContext.request.contextPath}/home">
                 <i class="fas fa-comments me-2"></i><fmt:message key="app.name" />
@@ -36,16 +39,14 @@
                         <a class="nav-link" href="${pageContext.request.contextPath}/home#categories"><fmt:message key="menu.categories" /></a>
                     </li>
                 </ul>
-                <c:if test="${fn:endsWith(pageContext.request.requestURI, 'index.jsp') or pageContext.request.servletPath == '/home' or pageContext.request.servletPath == ''}">
-                    <form class="d-flex mx-auto col-lg-4 mb-3 mb-lg-0" action="${pageContext.request.contextPath}/search" method="get">
-                        <div class="input-group">
-                            <input class="form-control border-0" type="search" name="query" placeholder="<fmt:message key="search.placeholder" />" aria-label="Search" required>
-                            <button class="btn btn-light text-primary border-0" type="submit">
-                                <i class="fas fa-search"></i>
-                            </button>
-                        </div>
-                    </form>
-                </c:if>
+                <form class="mx-auto col-12 col-lg-auto mb-3 mb-lg-0 px-lg-3" action="${pageContext.request.contextPath}/search" method="get">
+                    <div class="search-shell">
+                        <input class="form-control" type="search" name="query" value="${param.query}" placeholder="<fmt:message key='search.placeholder' />" aria-label="Search" required>
+                        <button class="btn btn-primary" type="submit" title="Search">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </form>
                 <ul class="navbar-nav ms-auto align-items-center">
                     <!-- Language Selector -->
                     <li class="nav-item dropdown me-2">

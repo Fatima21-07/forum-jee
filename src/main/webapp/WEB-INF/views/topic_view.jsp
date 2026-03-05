@@ -26,6 +26,30 @@
         <div class="topic-content lead">
             ${topic.content}
         </div>
+        <c:if test="${not empty sessionScope.user and sessionScope.user.id == topic.user_id}">
+            <div class="d-flex justify-content-end gap-2 mt-4">
+                <button class="btn btn-outline-primary btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#editTopicForm">
+                    Modifier
+                </button>
+                <form action="${pageContext.request.contextPath}/topic/delete" method="post" onsubmit="return confirm('Supprimer ce sujet ?');">
+                    <input type="hidden" name="topicId" value="${topic.id}">
+                    <button type="submit" class="btn btn-outline-danger btn-sm">Supprimer</button>
+                </form>
+            </div>
+
+            <div class="collapse mt-3" id="editTopicForm">
+                <form action="${pageContext.request.contextPath}/topic/edit" method="post">
+                    <input type="hidden" name="topicId" value="${topic.id}">
+                    <div class="mb-2">
+                        <input type="text" class="form-control" name="title" value="${topic.title}" required>
+                    </div>
+                    <div class="mb-2">
+                        <textarea class="form-control" name="content" rows="4" required>${topic.content}</textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-sm">Enregistrer</button>
+                </form>
+            </div>
+        </c:if>
     </div>
 </div>
 
@@ -48,6 +72,27 @@
             <div class="message-content">
                 ${p.content}
             </div>
+            <c:if test="${not empty sessionScope.user and sessionScope.user.id == p.user_id}">
+                <div class="d-flex justify-content-end gap-2 mt-3">
+                    <button class="btn btn-outline-primary btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#editPost${p.id}">
+                        Modifier
+                    </button>
+                    <form action="${pageContext.request.contextPath}/post/delete" method="post" onsubmit="return confirm('Supprimer cette réponse ?');">
+                        <input type="hidden" name="postId" value="${p.id}">
+                        <input type="hidden" name="topicId" value="${topic.id}">
+                        <button type="submit" class="btn btn-outline-danger btn-sm">Supprimer</button>
+                    </form>
+                </div>
+
+                <div class="collapse mt-3" id="editPost${p.id}">
+                    <form action="${pageContext.request.contextPath}/post/edit" method="post">
+                        <input type="hidden" name="postId" value="${p.id}">
+                        <input type="hidden" name="topicId" value="${topic.id}">
+                        <textarea class="form-control mb-2" name="content" rows="3" required>${p.content}</textarea>
+                        <button type="submit" class="btn btn-primary btn-sm">Enregistrer</button>
+                    </form>
+                </div>
+            </c:if>
         </div>
     </div>
 </c:forEach>

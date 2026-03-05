@@ -1,12 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Add dynamic behavior to cards
-    const cards = document.querySelectorAll('.card');
-    cards.forEach(card => {
-        card.addEventListener('mouseenter', () => {
-            // card.style.transition = 'all 0.3s ease';
-        });
-    });
-
     // Auto-dismiss alerts
     const alerts = document.querySelectorAll('.alert-success');
     alerts.forEach(alert => {
@@ -26,19 +18,16 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Simple search functionality (optional but nice)
+    // Local filtering for topic list page
     const searchInput = document.querySelector('#searchInput');
     if (searchInput) {
-        searchInput.addEventListener('keyup', (e) => {
+        searchInput.addEventListener('input', (e) => {
             const term = e.target.value.toLowerCase();
-            const topics = document.querySelectorAll('.list-group-item');
+            const topics = document.querySelectorAll('.topic-row');
             topics.forEach(topic => {
-                const title = topic.querySelector('h5').textContent.toLowerCase();
-                if (title.includes(term)) {
-                    topic.style.display = 'block';
-                } else {
-                    topic.style.display = 'none';
-                }
+                const titleElement = topic.querySelector('.topic-item-title');
+                const title = titleElement ? titleElement.textContent.toLowerCase() : '';
+                topic.style.display = title.includes(term) ? '' : 'none';
             });
         });
     }

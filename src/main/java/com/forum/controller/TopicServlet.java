@@ -13,7 +13,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@WebServlet(name = "TopicServlet", urlPatterns = {"/topics", "/topic", "/topic/new"})
+@WebServlet(name = "TopicServlet", urlPatterns = {"/topics", "/topic", "/topic/new", "/topic/edit", "/topic/delete"})
 public class TopicServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
@@ -39,6 +39,10 @@ public class TopicServlet extends HttpServlet {
         String path = request.getServletPath();
         if ("/topic/new".equals(path)) {
             handleCreateTopic(request, response);
+        } else if ("/topic/edit".equals(path)) {
+            handleEditTopic(request, response);
+        } else if ("/topic/delete".equals(path)) {
+            handleDeleteTopic(request, response);
         }
     }
 
@@ -159,6 +163,76 @@ public class TopicServlet extends HttpServlet {
                 request.setAttribute("categoryId", categoryId);
                 request.getRequestDispatcher("/WEB-INF/views/topic_new.jsp").forward(request, response);
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new ServletException(e);
+        }
+    }
+
+    private void handleEditTopic(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        User user = (User) request.getSession().getAttribute("user");
+        if (user == null) {
+            response.sendRedirect(request.getContextPath() + "/login");
+            return;
+        }
+
+        long topicId = Long.parseLong(request.getParameter("topicId"));
+        String title = request.getParameter("title");
+        String content = request.getParameter("content");
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement("UPDATE topics SET title = ?, content = ? WHERE id = ? AND user_id = ?")) {
+            ps.setString(1, title);
+            ps.setString(2, content);
+            ps.setLong(3, topicId);
+            ps.setLong(4, user.getId());
+            ps.executeUpdate();
+            response.sendRedirect(request.getContextPath() + "/topic?id=" + topicId);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new ServletException(e);
+        }
+    }
+
+    private void handleDeleteTopic(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        User user = (User) request.getSession().getAttribute("user");
+        if (user == null) {
+            response.sendRedirect(request.getContextPath() + "/login");
+            return;
+        }
+
+        long topicId = Long.parseLong(request.getParameter("topicId"));
+
+        try (Connection conn = DBConnection.getConnection()) {
+            int categoryId = -1;
+
+            try (PreparedStatement select = conn.prepareStatement("SELECT category_id FROM topics WHERE id = ? AND user_id = ?")) {
+                select.setLong(1, topicId);
+                select.setLong(2, user.getId());
+                try (ResultSet rs = select.executeQuery()) {
+                    if (rs.next()) {
+                        categoryId = rs.getInt("category_id");
+                    }
+                }
+            }
+
+            if (categoryId == -1) {
+                response.sendRedirect(request.getContextPath() + "/home");
+                return;
+            }
+
+            try (PreparedStatement deletePosts = conn.prepareStatement("DELETE FROM posts WHERE topic_id = ?")) {
+                deletePosts.setLong(1, topicId);
+                deletePosts.executeUpdate();
+            }
+
+            try (PreparedStatement deleteTopic = conn.prepareStatement("DELETE FROM topics WHERE id = ? AND user_id = ?")) {
+                deleteTopic.setLong(1, topicId);
+                deleteTopic.setLong(2, user.getId());
+                deleteTopic.executeUpdate();
+            }
+
+            response.sendRedirect(request.getContextPath() + "/topics?categoryId=" + categoryId);
         } catch (SQLException e) {
             e.printStackTrace();
             throw new ServletException(e);

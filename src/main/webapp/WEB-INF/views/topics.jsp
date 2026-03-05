@@ -19,6 +19,17 @@
     </c:if>
 </div>
 
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-body p-3">
+        <div class="input-group">
+            <span class="input-group-text bg-white border-end-0">
+                <i class="fas fa-filter text-muted"></i>
+            </span>
+            <input id="searchInput" type="text" class="form-control border-start-0" placeholder="Filtrer les sujets dans cette catégorie...">
+        </div>
+    </div>
+</div>
+
 <div class="card shadow-sm border-0">
     <div class="list-group list-group-flush">
         <c:choose>
@@ -31,10 +42,10 @@
             </c:when>
             <c:otherwise>
                 <c:forEach var="topic" items="${topics}">
-                    <a href="topic?id=${topic.id}" class="list-group-item list-group-item-action p-4 border-bottom">
+                    <a href="topic?id=${topic.id}" class="list-group-item list-group-item-action p-4 border-bottom topic-row">
                         <div class="d-flex w-100 justify-content-between align-items-center">
                             <div>
-                                <h5 class="mb-1 fw-bold text-dark">${topic.title}</h5>
+                                <h5 class="mb-2 fw-bold topic-item-title">${topic.title}</h5>
                                 <div class="text-muted small">
                                     <i class="fas fa-user me-1"></i> ${topic.authorName} 
                                     <span class="mx-2">|</span>
@@ -42,7 +53,7 @@
                                 </div>
                             </div>
                             <div class="text-end">
-                                <span class="badge bg-primary rounded-pill px-3 py-2">
+                                <span class="stats-pill">
                                     <i class="fas fa-comment me-1"></i> ${topic.postCount}
                                 </span>
                             </div>

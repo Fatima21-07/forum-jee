@@ -1,7 +1,7 @@
-    </div>
-    <footer class="footer mt-auto py-3 bg-white border-top">
+﻿    </div>
+    <footer class="footer mt-auto py-4">
         <div class="container text-center">
-            <span class="text-muted small">&copy; 2024 Forum de discussion - Filière CDL</span>
+            <span class="text-muted small">&copy; 2026 Forum CDL — Espace communautaire étudiant</span>
         </div>
     </footer>
     <!-- Bootstrap JS Bundle -->

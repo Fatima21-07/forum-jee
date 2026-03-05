@@ -1,9 +1,13 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ include file="/WEB-INF/views/layout/header.jsp" %>
-<div class="p-5 mb-4 bg-primary text-white rounded-3 shadow">
+<div class="hero-panel p-5 mb-4 text-white">
     <div class="container-fluid py-5">
-        <h1 class="display-5 fw-bold"><fmt:message key="welcome.title" /></h1>
-        <p class="col-md-8 fs-4"><fmt:message key="welcome.subtitle" /></p>
+        <div class="d-flex flex-wrap gap-2 mb-3">
+            <span class="badge text-bg-light text-primary fw-semibold px-3 py-2">CDL Community</span>
+            <span class="badge text-bg-light text-primary fw-semibold px-3 py-2">Q&A</span>
+        </div>
+        <h1 class="display-5 fw-bold mb-3"><fmt:message key="welcome.title" /></h1>
+        <p class="col-md-8 fs-5 hero-subtitle mb-4"><fmt:message key="welcome.subtitle" /></p>
         <c:choose>
             <c:when test="${empty sessionScope.user}">
                 <a href="register" class="btn btn-light btn-lg fw-bold px-4"><fmt:message key="hero.button" /></a>
@@ -17,12 +21,12 @@
 
 <div id="categories" class="my-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="fw-bold text-primary"><i class="fas fa-th-large me-2"></i><fmt:message key="home.modules" /></h2>
+        <h2 class="fw-bold text-primary section-title"><i class="fas fa-th-large me-2"></i><fmt:message key="home.modules" /></h2>
     </div>
     <div class="row g-4">
         <c:forEach var="category" items="${categories}">
             <div class="col-md-6 col-lg-4">
-                <div class="card h-100 shadow-sm border-0 category-card transition-hover">
+                <div class="card h-100 shadow-sm border-0 category-card">
                     <div class="card-body p-4">
                         <div class="d-flex align-items-center mb-3">
                             <div class="category-icon bg-primary bg-opacity-10 text-primary rounded-3 p-3 me-3">
@@ -42,15 +46,5 @@
         </c:forEach>
     </div>
 </div>
-
-<style>
-    .transition-hover {
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    .transition-hover:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
-    }
-</style>
 
 <%@ include file="/WEB-INF/views/layout/footer.jsp" %>
